@@ -31,9 +31,9 @@ class RepositoryAdapter(private val repositories: List<Repository>) :
         
         holder.repositoryName.text = repository.name
         holder.repositoryDescription.text = repository.description
-        holder.language.text = repository.language
-        holder.stars.text = "★ ${repository.stars}"
-        holder.visibility.text = if (repository.isPublic) "Public" else "Private"
+        holder.language.text = "Lenguaje: ${repository.language}"
+        holder.stars.visibility = View.GONE
+        holder.visibility.visibility = View.GONE
     }
 
     override fun getItemCount(): Int = repositories.size

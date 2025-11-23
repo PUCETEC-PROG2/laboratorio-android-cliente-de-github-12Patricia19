@@ -1,63 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@android:color/white">
 
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/white"
+        android:elevation="2dp"
+        app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
+        app:navigationIconTint="#333333"
+        app:title="Nuevo Repositorio"
+        app:titleTextColor="#333333" />
 
-        <TextView
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Crear Nuevo Proyecto"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:gravity="center"
-            android:layout_marginBottom="32dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nombre del Proyecto"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="8dp" />
+            android:orientation="vertical"
+            android:padding="24dp">
 
         <EditText
             android:id="@+id/etProjectName"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:hint="Ingresa el nombre del proyecto"
+            android:hint="Nombre del repositorio"
             android:background="@drawable/edittext_background"
             android:paddingHorizontal="16dp"
             android:textSize="16sp"
-            android:layout_marginBottom="24dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Descripción del Proyecto"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="8dp" />
+            android:textColor="#333333"
+            android:textColorHint="#AAAAAA"
+            android:layout_marginBottom="20dp" />
 
         <EditText
             android:id="@+id/etProjectDescription"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:hint="Describe tu proyecto..."
+            android:layout_height="56dp"
+            android:hint="Descripción del repositorio"
             android:background="@drawable/edittext_background"
             android:paddingHorizontal="16dp"
-            android:paddingVertical="12dp"
             android:textSize="16sp"
-            android:gravity="top"
-            android:inputType="textMultiLine"
+            android:textColor="#333333"
+            android:textColorHint="#AAAAAA"
+            android:layout_marginBottom="20dp" />
+
+        <CheckBox
+            android:id="@+id/cbPrivate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Repositorio Privado"
+            android:textSize="15sp"
+            android:textColor="#666666"
             android:layout_marginBottom="32dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -68,25 +78,30 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnCancel"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:layout_weight="1"
                 android:text="Cancelar"
-                android:textColor="@color/purple_500"
+                android:textColor="#666666"
+                android:textSize="15sp"
                 android:background="@drawable/button_outline"
                 android:layout_marginEnd="8dp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnCreate"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:layout_weight="1"
-                android:text="Crear Proyecto"
+                android:text="Guardar"
                 android:textColor="@android:color/white"
-                android:background="@color/purple_500"
+                android:textSize="15sp"
+                android:textAllCaps="false"
+                android:background="#6BA3E8"
                 android:layout_marginStart="8dp" />
 
         </LinearLayout>
 
-    </LinearLayout>
+        </LinearLayout>
 
-</ScrollView>
+    </ScrollView>
+
+</LinearLayout>

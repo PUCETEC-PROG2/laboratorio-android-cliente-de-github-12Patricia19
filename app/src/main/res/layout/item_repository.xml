@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView 
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    android:orientation="vertical"
+    android:background="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
 
         <ImageView
             android:id="@+id/ivRepositoryIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_launcher_foreground"
-            android:background="@drawable/ic_launcher_background"
-            android:scaleType="centerCrop" />
+            android:src="@drawable/repo_placeholder"
+            android:scaleType="centerCrop"
+            android:contentDescription="Repository icon" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -29,72 +30,56 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvRepositoryName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="4dp">
-
-                <TextView
-                    android:id="@+id/tvRepositoryName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Repository Name"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:id="@+id/tvVisibility"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Public"
-                    android:textSize="12sp"
-                    android:background="@color/purple_200"
-                    android:textColor="@android:color/white"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp"
-                    android:layout_marginStart="8dp" />
-
-            </LinearLayout>
+                android:text="Nombre del repositorio"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:layout_marginBottom="6dp" />
 
             <TextView
                 android:id="@+id/tvRepositoryDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Repository description goes here"
+                android:text="Descripción del repositorio"
                 android:textSize="14sp"
-                android:textColor="@android:color/darker_gray"
-                android:layout_marginBottom="8dp" />
+                android:textColor="#666666"
+                android:layout_marginBottom="10dp"
+                android:maxLines="2"
+                android:ellipsize="end" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvLanguage"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:text="Lenguaje"
+                android:textSize="13sp"
+                android:textColor="#999999"
+                android:layout_marginBottom="0dp" />
 
-                <TextView
-                    android:id="@+id/tvLanguage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Kotlin"
-                    android:textSize="12sp"
-                    android:textColor="@android:color/black"
-                    android:layout_marginEnd="16dp" />
+            <TextView
+                android:id="@+id/tvStars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/tvStars"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="★ 0"
-                    android:textSize="12sp"
-                    android:textColor="@android:color/black" />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/tvVisibility"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#F0F0F0"
+        android:layout_marginStart="16dp" />
+
+</LinearLayout>
