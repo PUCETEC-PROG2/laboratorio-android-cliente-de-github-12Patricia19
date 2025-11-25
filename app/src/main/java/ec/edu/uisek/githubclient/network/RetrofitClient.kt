@@ -36,7 +36,7 @@ object RetrofitClient {
     
     fun getAuthToken(): String {
         return if (GITHUB_TOKEN.isNotEmpty()) {
-            "token $GITHUB_TOKEN"
+            "Bearer $GITHUB_TOKEN"
         } else {
             ""
         }
