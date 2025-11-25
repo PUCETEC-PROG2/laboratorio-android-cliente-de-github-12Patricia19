@@ -18,6 +18,7 @@ import ec.edu.uisek.githubclient.R
 import ec.edu.uisek.githubclient.adapter.RepositoryAdapter
 import ec.edu.uisek.githubclient.model.CreateRepositoryRequest
 import ec.edu.uisek.githubclient.model.Repository
+import ec.edu.uisek.githubclient.model.UpdateRepositoryRequest
 import ec.edu.uisek.githubclient.network.RetrofitClient
 import kotlinx.coroutines.launch
 
@@ -170,10 +171,8 @@ class RepositoryListFragment : Fragment() {
         
         lifecycleScope.launch {
             try {
-                val request = CreateRepositoryRequest(
-                    name = newName,
-                    description = newDescription,
-                    isPrivate = !repository.isPublic
+                val request = UpdateRepositoryRequest(
+                    description = newDescription
                 )
                 
                 val response = RetrofitClient.apiService.updateRepository(
