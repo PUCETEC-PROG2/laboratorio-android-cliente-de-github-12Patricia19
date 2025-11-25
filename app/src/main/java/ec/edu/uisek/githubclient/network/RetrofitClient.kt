@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 object RetrofitClient {
     
     private const val BASE_URL = "https://api.github.com/"
-    private const val GITHUB_TOKEN = ""
+    private const val GITHUB_TOKEN = "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"
     
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

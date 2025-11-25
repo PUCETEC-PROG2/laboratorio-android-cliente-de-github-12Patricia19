@@ -16,13 +16,13 @@
         android:paddingBottom="20dp">
 
         <ImageView
-            android:id="@+id/ivRepositoryIcon"
+            android:id="@+id/ivRepositoryAvatar"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_marginEnd="16dp"
-            android:src="@drawable/repo_placeholder"
+            android:background="@drawable/repo_placeholder"
             android:scaleType="centerCrop"
-            android:contentDescription="Repository icon" />
+            android:contentDescription="Avatar" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -71,6 +71,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/btnEdit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_edit"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Editar"
+                android:layout_marginBottom="8dp"
+                android:tint="#666666" />
+
+            <ImageButton
+                android:id="@+id/btnDelete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_delete"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Eliminar"
+                android:tint="#E57373" />
 
         </LinearLayout>
 

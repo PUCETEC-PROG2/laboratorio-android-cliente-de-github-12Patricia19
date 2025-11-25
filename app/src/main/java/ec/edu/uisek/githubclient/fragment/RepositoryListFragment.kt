@@ -1,9 +1,11 @@
 package ec.edu.uisek.githubclient.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ec.edu.uisek.githubclient.R
 import ec.edu.uisek.githubclient.adapter.RepositoryAdapter
+import ec.edu.uisek.githubclient.model.CreateRepositoryRequest
 import ec.edu.uisek.githubclient.model.Repository
 import ec.edu.uisek.githubclient.network.RetrofitClient
 import kotlinx.coroutines.launch
@@ -26,7 +29,7 @@ class RepositoryListFragment : Fragment() {
     private lateinit var fabAddRepo: FloatingActionButton
     private lateinit var adapter: RepositoryAdapter
     
-    private val githubUsername = "google"
+    private val repositories = mutableListOf<Repository>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,26 +70,35 @@ class RepositoryListFragment : Fragment() {
         
         lifecycleScope.launch {
             try {
-                val response = RetrofitClient.apiService.getUserRepositories(
-                    username = githubUsername,
-                    perPage = 30
-                )
+                val response = if (RetrofitClient.hasToken()) {
+                    RetrofitClient.apiService.getAuthenticatedUserRepositories(
+                        token = RetrofitClient.getAuthToken(),
+                        perPage = 100
+                    )
+                } else {
+                    RetrofitClient.apiService.getUserRepositories(
+                        username = "google",
+                        perPage = 30
+                    )
+                }
                 
                 if (response.isSuccessful) {
                     val githubRepositories = response.body() ?: emptyList()
-                    val repositories = githubRepositories.map { 
+                    repositories.clear()
+                    repositories.addAll(githubRepositories.map { 
                         Repository.fromGitHubRepository(it) 
-                    }
+                    })
                     
                     if (repositories.isEmpty()) {
-                        showError("No se encontraron repositorios para @$githubUsername")
+                        showError("No se encontraron repositorios")
                     } else {
                         showRepositories(repositories)
-                        Toast.makeText(
-                            requireContext(),
-                            "Se cargaron ${repositories.size} repositorios de @$githubUsername",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        val message = if (RetrofitClient.hasToken()) {
+                            "Se cargaron ${repositories.size} repositorios tuyos"
+                        } else {
+                            "Se cargaron ${repositories.size} repositorios de @google"
+                        }
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     showError("Error al cargar repositorios: ${response.code()}")
@@ -99,10 +111,112 @@ class RepositoryListFragment : Fragment() {
     
     private fun showRepositories(repositories: List<Repository>) {
         showLoading(false)
-        adapter = RepositoryAdapter(repositories)
+        adapter = RepositoryAdapter(
+            repositories = repositories,
+            onEditClick = { repository -> showEditDialog(repository) },
+            onDeleteClick = { repository -> showDeleteDialog(repository) }
+        )
         recyclerView.adapter = adapter
         recyclerView.visibility = View.VISIBLE
         tvError.visibility = View.GONE
+    }
+    
+    private fun showEditDialog(repository: Repository) {
+        if (!RetrofitClient.hasToken()) {
+            Toast.makeText(requireContext(), "Necesitas configurar un token de GitHub para editar repositorios", Toast.LENGTH_LONG).show()
+            return
+        }
+        
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_repo, null)
+        val etName = dialogView.findViewById<EditText>(R.id.etRepoName)
+        val etDescription = dialogView.findViewById<EditText>(R.id.etRepoDescription)
+        
+        etName.setText(repository.name)
+        etDescription.setText(repository.description)
+        
+        AlertDialog.Builder(requireContext())
+            .setTitle("Editar Repositorio")
+            .setView(dialogView)
+            .setPositiveButton("Guardar") { _, _ ->
+                val newName = etName.text.toString()
+                val newDescription = etDescription.text.toString()
+                updateRepository(repository, newName, newDescription)
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+    
+    private fun showDeleteDialog(repository: Repository) {
+        if (!RetrofitClient.hasToken()) {
+            Toast.makeText(requireContext(), "Necesitas configurar un token de GitHub para eliminar repositorios", Toast.LENGTH_LONG).show()
+            return
+        }
+        
+        AlertDialog.Builder(requireContext())
+            .setTitle("Eliminar Repositorio")
+            .setMessage("¿Estás seguro de que quieres eliminar '${repository.name}'?")
+            .setPositiveButton("Eliminar") { _, _ ->
+                deleteRepository(repository)
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+    
+    private fun updateRepository(repository: Repository, newName: String, newDescription: String) {
+        showLoading(true)
+        
+        lifecycleScope.launch {
+            try {
+                val request = CreateRepositoryRequest(
+                    name = newName,
+                    description = newDescription,
+                    isPrivate = !repository.isPublic
+                )
+                
+                val response = RetrofitClient.apiService.updateRepository(
+                    token = RetrofitClient.getAuthToken(),
+                    owner = repository.owner,
+                    repo = repository.name,
+                    request = request
+                )
+                
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "Repositorio actualizado", Toast.LENGTH_SHORT).show()
+                    fetchRepositories()
+                } else {
+                    showLoading(false)
+                    Toast.makeText(requireContext(), "Error al actualizar: ${response.code()}", Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                showLoading(false)
+                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+    
+    private fun deleteRepository(repository: Repository) {
+        showLoading(true)
+        
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.apiService.deleteRepository(
+                    token = RetrofitClient.getAuthToken(),
+                    owner = repository.owner,
+                    repo = repository.name
+                )
+                
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "Repositorio eliminado", Toast.LENGTH_SHORT).show()
+                    fetchRepositories()
+                } else {
+                    showLoading(false)
+                    Toast.makeText(requireContext(), "Error al eliminar: ${response.code()}", Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                showLoading(false)
+                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
     }
     
     private fun showError(message: String) {

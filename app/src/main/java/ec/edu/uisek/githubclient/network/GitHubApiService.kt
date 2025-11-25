@@ -15,9 +15,33 @@ interface GitHubApiService {
         @Query("sort") sort: String = "updated"
     ): Response<List<GitHubRepository>>
     
+    @GET("user/repos")
+    suspend fun getAuthenticatedUserRepositories(
+        @Header("Authorization") token: String,
+        @Query("per_page") perPage: Int = 30,
+        @Query("page") page: Int = 1,
+        @Query("sort") sort: String = "updated",
+        @Query("affiliation") affiliation: String = "owner"
+    ): Response<List<GitHubRepository>>
+    
     @POST("user/repos")
     suspend fun createRepository(
         @Header("Authorization") token: String,
         @Body request: CreateRepositoryRequest
     ): Response<GitHubRepository>
+    
+    @PATCH("repos/{owner}/{repo}")
+    suspend fun updateRepository(
+        @Header("Authorization") token: String,
+        @Path("owner") owner: String,
+        @Path("repo") repo: String,
+        @Body request: CreateRepositoryRequest
+    ): Response<GitHubRepository>
+    
+    @DELETE("repos/{owner}/{repo}")
+    suspend fun deleteRepository(
+        @Header("Authorization") token: String,
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): Response<Unit>
 }
