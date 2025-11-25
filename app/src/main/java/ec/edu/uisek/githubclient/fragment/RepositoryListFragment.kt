@@ -114,7 +114,8 @@ class RepositoryListFragment : Fragment() {
         showLoading(false)
         adapter = RepositoryAdapter(
             repositories = repositories,
-            onItemClick = { repository -> navigateToEdit(repository) }
+            onEditClick = { repository -> navigateToEdit(repository) },
+            onDeleteClick = { repository -> showDeleteDialog(repository) }
         )
         recyclerView.adapter = adapter
         recyclerView.visibility = View.VISIBLE

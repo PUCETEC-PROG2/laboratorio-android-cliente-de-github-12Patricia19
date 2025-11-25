@@ -25,7 +25,6 @@ class RepositoryEditFragment : Fragment() {
     private lateinit var etRepositoryDescription: EditText
     private lateinit var btnSaveChanges: Button
     private lateinit var btnCancel: Button
-    private lateinit var btnDeleteRepository: Button
     private lateinit var progressBar: ProgressBar
 
     private var repository: Repository? = null
@@ -93,7 +92,6 @@ class RepositoryEditFragment : Fragment() {
                 Toast.LENGTH_LONG
             ).show()
             btnSaveChanges.isEnabled = false
-            btnDeleteRepository.isEnabled = false
         }
     }
 
@@ -102,7 +100,6 @@ class RepositoryEditFragment : Fragment() {
         etRepositoryDescription = view.findViewById(R.id.etRepositoryDescription)
         btnSaveChanges = view.findViewById(R.id.btnSaveChanges)
         btnCancel = view.findViewById(R.id.btnCancel)
-        btnDeleteRepository = view.findViewById(R.id.btnDeleteRepository)
         progressBar = view.findViewById(R.id.progressBar)
     }
 
@@ -120,10 +117,6 @@ class RepositoryEditFragment : Fragment() {
 
         btnCancel.setOnClickListener {
             navigateBack()
-        }
-
-        btnDeleteRepository.setOnClickListener {
-            showDeleteConfirmation()
         }
     }
 
@@ -174,64 +167,10 @@ class RepositoryEditFragment : Fragment() {
         }
     }
 
-    private fun showDeleteConfirmation() {
-        repository?.let { repo ->
-            AlertDialog.Builder(requireContext())
-                .setTitle("Eliminar Repositorio")
-                .setMessage("¿Estás seguro de que quieres eliminar '${repo.name}'?\n\nEsta acción no se puede deshacer.")
-                .setPositiveButton("Eliminar") { _, _ ->
-                    deleteRepository()
-                }
-                .setNegativeButton("Cancelar", null)
-                .show()
-        }
-    }
-
-    private fun deleteRepository() {
-        repository?.let { repo ->
-            showLoading(true)
-
-            lifecycleScope.launch {
-                try {
-                    val response = RetrofitClient.apiService.deleteRepository(
-                        token = RetrofitClient.getAuthToken(),
-                        owner = repo.owner,
-                        repo = repo.name
-                    )
-
-                    showLoading(false)
-
-                    if (response.isSuccessful) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Repositorio eliminado exitosamente",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        navigateBack()
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Error al eliminar: ${response.code()}",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                } catch (e: Exception) {
-                    showLoading(false)
-                    Toast.makeText(
-                        requireContext(),
-                        "Error: ${e.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
-    }
-
     private fun showLoading(isLoading: Boolean) {
         progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         btnSaveChanges.isEnabled = !isLoading
         btnCancel.isEnabled = !isLoading
-        btnDeleteRepository.isEnabled = !isLoading
         etRepositoryDescription.isEnabled = !isLoading
     }
 
