@@ -44,3 +44,14 @@ data class Owner(
     @SerializedName("html_url")
     val htmlUrl: String
 )
+
+data class AuthenticatedUser(
+    @SerializedName("login")
+    val login: String,
+    
+    @SerializedName("name")
+    val name: String?,
+    
+    @SerializedName("avatar_url")
+    val avatarUrl: String
+)

@@ -1,5 +1,6 @@
 package ec.edu.uisek.githubclient.network
 
+import ec.edu.uisek.githubclient.model.AuthenticatedUser
 import ec.edu.uisek.githubclient.model.CreateRepositoryRequest
 import ec.edu.uisek.githubclient.model.GitHubRepository
 import ec.edu.uisek.githubclient.model.UpdateRepositoryRequest
@@ -7,6 +8,11 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface GitHubApiService {
+    
+    @GET("user")
+    suspend fun getAuthenticatedUser(
+        @Header("Authorization") token: String
+    ): Response<AuthenticatedUser>
     
     @GET("users/{username}/repos")
     suspend fun getUserRepositories(

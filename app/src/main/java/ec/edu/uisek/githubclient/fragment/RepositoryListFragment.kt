@@ -208,16 +208,45 @@ class RepositoryListFragment : Fragment() {
                     repo = repository.name
                 )
                 
-                if (response.isSuccessful) {
-                    Toast.makeText(requireContext(), "Repositorio eliminado", Toast.LENGTH_SHORT).show()
-                    fetchRepositories()
-                } else {
-                    showLoading(false)
-                    Toast.makeText(requireContext(), "Error al eliminar: ${response.code()}", Toast.LENGTH_LONG).show()
+                showLoading(false)
+                
+                when (response.code()) {
+                    204 -> {
+                        Toast.makeText(requireContext(), "Repositorio eliminado exitosamente", Toast.LENGTH_SHORT).show()
+                        fetchRepositories()
+                    }
+                    404 -> {
+                        Toast.makeText(
+                            requireContext(),
+                            "Repositorio no encontrado",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    403 -> {
+                        Toast.makeText(
+                            requireContext(),
+                            "No tienes permisos para eliminar este repositorio. Verifica tu token.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    401 -> {
+                        Toast.makeText(
+                            requireContext(),
+                            "Token inválido o expirado",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    else -> {
+                        Toast.makeText(
+                            requireContext(),
+                            "Error al eliminar (${response.code()})",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             } catch (e: Exception) {
                 showLoading(false)
-                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Error de red: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
