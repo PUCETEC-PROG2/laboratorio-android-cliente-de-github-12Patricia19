@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import ec.edu.uisek.githubclient.fragment.ProjectFormFragment
+import ec.edu.uisek.githubclient.fragment.RepositoryEditFragment
 import ec.edu.uisek.githubclient.fragment.RepositoryListFragment
+import ec.edu.uisek.githubclient.model.Repository
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +28,10 @@ class MainActivity : AppCompatActivity() {
     
     fun navigateToForm() {
         loadFragment(ProjectFormFragment())
+    }
+    
+    fun navigateToEdit(repository: Repository) {
+        loadFragment(RepositoryEditFragment.newInstance(repository))
     }
     
     fun navigateToList() {

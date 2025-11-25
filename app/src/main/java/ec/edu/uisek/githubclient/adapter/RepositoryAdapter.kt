@@ -14,8 +14,7 @@ import ec.edu.uisek.githubclient.model.Repository
 
 class RepositoryAdapter(
     private val repositories: List<Repository>,
-    private val onEditClick: (Repository) -> Unit,
-    private val onDeleteClick: (Repository) -> Unit
+    private val onItemClick: (Repository) -> Unit
 ) : RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>() {
 
     class RepositoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -46,13 +45,13 @@ class RepositoryAdapter(
         holder.repositoryDescription.text = repository.description
         holder.language.text = "Lenguaje: ${repository.language}"
         
+        // Click en el botón de editar lleva a la pantalla de edición
         holder.btnEdit.setOnClickListener {
-            onEditClick(repository)
+            onItemClick(repository)
         }
         
-        holder.btnDelete.setOnClickListener {
-            onDeleteClick(repository)
-        }
+        // Ocultar el botón de eliminar ya que ahora se elimina desde la pantalla de edición
+        holder.btnDelete.visibility = View.GONE
     }
 
     override fun getItemCount(): Int = repositories.size

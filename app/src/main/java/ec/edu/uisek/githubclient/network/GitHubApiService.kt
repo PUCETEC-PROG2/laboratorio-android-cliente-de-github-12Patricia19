@@ -2,6 +2,7 @@ package ec.edu.uisek.githubclient.network
 
 import ec.edu.uisek.githubclient.model.CreateRepositoryRequest
 import ec.edu.uisek.githubclient.model.GitHubRepository
+import ec.edu.uisek.githubclient.model.UpdateRepositoryRequest
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -35,7 +36,7 @@ interface GitHubApiService {
         @Header("Authorization") token: String,
         @Path("owner") owner: String,
         @Path("repo") repo: String,
-        @Body request: CreateRepositoryRequest
+        @Body request: UpdateRepositoryRequest
     ): Response<GitHubRepository>
     
     @DELETE("repos/{owner}/{repo}")

@@ -113,12 +113,15 @@ class RepositoryListFragment : Fragment() {
         showLoading(false)
         adapter = RepositoryAdapter(
             repositories = repositories,
-            onEditClick = { repository -> showEditDialog(repository) },
-            onDeleteClick = { repository -> showDeleteDialog(repository) }
+            onItemClick = { repository -> navigateToEdit(repository) }
         )
         recyclerView.adapter = adapter
         recyclerView.visibility = View.VISIBLE
         tvError.visibility = View.GONE
+    }
+    
+    private fun navigateToEdit(repository: Repository) {
+        (requireActivity() as? ec.edu.uisek.githubclient.MainActivity)?.navigateToEdit(repository)
     }
     
     private fun showEditDialog(repository: Repository) {
